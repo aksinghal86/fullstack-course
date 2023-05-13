@@ -4,10 +4,20 @@
 import { useState } from 'react'
 
 const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>
-const Totals = ({ total, text }) => <div>{text} {total}</div>
+const Totals = ({ reviews }) => {
+  return (
+    <div>
+      <div>good: {reviews.good}</div>
+      <div>neutral: {reviews.neutral}</div>
+      <div>bad: {reviews.bad}</div>
+    </div>
+  )
+}
+
 const Average = ({ reviews }) => {
-  const numerator = reviews[0] + reviews[1]*0 + reviews[2]*-1
-  const denominator = reviews[0] + reviews[1] + reviews[2]
+  const numerator = reviews.good + reviews.bad*-1
+  const denominator = reviews.good + reviews.neutral + reviews.bad
+  
   if (denominator === 0) { 
     return (
       <div>
@@ -23,8 +33,8 @@ const Average = ({ reviews }) => {
 }
 
 const PositivePct = ({ reviews }) => {
-  const numerator = reviews[0]
-  const denominator = reviews[0] + reviews[1] + reviews[2]
+  const numerator = reviews.good
+  const denominator = reviews.good + reviews.neutral + reviews.bad
   
   if (denominator === 0) { 
     return (
@@ -49,7 +59,11 @@ const App = () => {
   const increaseGoodByOne = () => setGood(good + 1)
   const increaseNeutralByOne = () => setNeutral(neutral + 1)
   const increaseBadByOne = () => setBad(bad + 1)
-
+  
+  const reviews = {
+    good: good, neutral: neutral, bad: bad
+  }
+  
   return (
     <div>
       <h1>give feedback</h1>
@@ -57,11 +71,9 @@ const App = () => {
       <Button handleClick={increaseNeutralByOne} text='neutral'/>
       <Button handleClick={increaseBadByOne} text='bad'/>
       <h1>statistics</h1>
-      <Totals total={good} text='good'/>
-      <Totals total={neutral} text='neutral'/>
-      <Totals total={bad} text='bad'/>
-      <Average reviews={[good, neutral, bad]}/>
-      <PositivePct reviews={[good, neutral, bad]} />
+      <Totals reviews={reviews} text='good'/>
+      <Average reviews={reviews} />
+      <PositivePct reviews={reviews} />
     </div>
   )
 }
