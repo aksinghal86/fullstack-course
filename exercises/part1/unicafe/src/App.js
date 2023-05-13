@@ -1,38 +1,28 @@
 // https://fullstackopen.com/en/part1/a_more_complex_state_debugging_react_apps
-// Exercise 1.6, 1.7, 1.8, 1.9
+// Exercise 1.6, 1.7, 1.8, 1.9, 1.10, 1.11
 
 import { useState } from 'react'
 
 const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>
-const Totals = ({ reviews }) => {
-  return (
-    <div>
-      <div>good: {reviews.good}</div>
-      <div>neutral: {reviews.neutral}</div>
-      <div>bad: {reviews.bad}</div>
-    </div>
-  )
-}
+const Total = ({ text, value }) => <tr><td>{text}</td><td>{value}</td></tr>
 
 const Average = ({ reviews }) => {
   const numerator = reviews.good + reviews.bad*-1
   const denominator = reviews.good + reviews.neutral + reviews.bad
+  const average = numerator/denominator 
   
   return (
-    <div>
-      average {numerator/denominator}
-    </div>
+    <tr><td>average</td><td>{average.toFixed(2)}</td></tr>
   )
 }
 
 const PositivePct = ({ reviews }) => {
   const numerator = reviews.good
   const denominator = reviews.good + reviews.neutral + reviews.bad
+  const pct = numerator/denominator*100
 
   return (
-    <div>
-      positive {numerator/denominator*100}%
-    </div>
+    <tr><td>positive</td><td>{pct.toFixed(1)}%</td></tr>
   )
 }
 
@@ -44,11 +34,15 @@ const Statistics = ({ reviews }) => {
     )
   }
   return (
-    <div>
-      <Totals reviews={reviews} />
-      <Average reviews={reviews} />
-      <PositivePct reviews={reviews} />
-    </div>
+    <table>
+      <tbody>
+        <Total text='good' value={reviews.good} />
+        <Total text='neutral' value={reviews.neutral} />
+        <Total text='bad' value={reviews.bad} />
+        <Average reviews={reviews} />
+        <PositivePct reviews={reviews} />
+      </tbody>
+    </table>
   )
 }
 
