@@ -1,5 +1,5 @@
 // https://fullstackopen.com/en/part1/a_more_complex_state_debugging_react_apps
-// Exercise 1.6, 1.7
+// Exercise 1.6, 1.7, 1.8, 1.9
 
 import { useState } from 'react'
 
@@ -18,13 +18,6 @@ const Average = ({ reviews }) => {
   const numerator = reviews.good + reviews.bad*-1
   const denominator = reviews.good + reviews.neutral + reviews.bad
   
-  if (denominator === 0) { 
-    return (
-      <div>
-        average no reviews have been submitted yet
-      </div>
-    )
-  }
   return (
     <div>
       average {numerator/denominator}
@@ -35,17 +28,26 @@ const Average = ({ reviews }) => {
 const PositivePct = ({ reviews }) => {
   const numerator = reviews.good
   const denominator = reviews.good + reviews.neutral + reviews.bad
-  
-  if (denominator === 0) { 
+
+  return (
+    <div>
+      positive {numerator/denominator*100}%
+    </div>
+  )
+}
+
+const Statistics = ({ reviews }) => {
+  const total = reviews.good + reviews.neutral + reviews.bad
+  if (total === 0) {
     return (
-      <div>
-        positive no reviews have been submitted yet
-      </div>
+      <div>No feedback given</div>
     )
   }
   return (
     <div>
-      positive {numerator/denominator*100}%
+      <Totals reviews={reviews} />
+      <Average reviews={reviews} />
+      <PositivePct reviews={reviews} />
     </div>
   )
 }
@@ -71,9 +73,7 @@ const App = () => {
       <Button handleClick={increaseNeutralByOne} text='neutral'/>
       <Button handleClick={increaseBadByOne} text='bad'/>
       <h1>statistics</h1>
-      <Totals reviews={reviews} text='good'/>
-      <Average reviews={reviews} />
-      <PositivePct reviews={reviews} />
+      <Statistics reviews={reviews} />
     </div>
   )
 }
