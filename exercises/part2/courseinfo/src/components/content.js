@@ -14,21 +14,22 @@ const Total = ({ parts }) => {
 const Part = ({ name, exercises }) => <p>{name} {exercises}</p>
 
 const Content = ({ content }) => {
+  console.log(content)
   return (
     <div> 
-      {content.map(part => 
+      <Header name={content.name}/>
+      {content.parts.map(part => 
         <Part key={part.id} name={part.name} exercises={part.exercises}/>
       )}
+      <Total parts={content.parts} />
     </div>
   )
 }
 
-const Course = ({ course }) => {
+const Course = ({ courses }) => {
   return(
     <div>
-      <Header name={course.name} />
-      <Content content={course.parts} />
-      <Total parts={course.parts} />
+      {courses.map(content => <Content key={content.id} content={content} />)}
     </div>
   )
 }
