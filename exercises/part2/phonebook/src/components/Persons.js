@@ -1,0 +1,13 @@
+import Name from './Name';
+
+const Persons = ({ persons }) => {
+    return(
+      <div>
+        {persons.map(person =>
+          <Name key={person.id} name={person.name} number={person.number} />
+        )}
+      </div>
+    )
+  }
+
+  export default Persons;
