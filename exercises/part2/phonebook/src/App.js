@@ -1,17 +1,20 @@
 // https://fullstackopen.com/en/part2/forms
-// Exercises 2.6, 2.7, 2.8, 2.9, 2.10, 2.11, 2.12, 2.13, 2.14, 2.15
+// Exercises 2.6, 2.7, 2.8, 2.9, 2.10, 2.11, 2.12, 2.13, 2.14, 2.15, 2.16, 2.17
 
 import { useState, useEffect } from 'react'
 import phonebookService from './services/phonebook'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
+  const [personStatus, setPersonStatus] = useState(null)
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [showPerson, setShowPerson] = useState([])
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     phonebookService
@@ -32,6 +35,26 @@ const App = () => {
         .then(returnedPerson => {
           setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
           setShowPerson(persons.map(p => p.id !== person.id ? p : returnedPerson))
+          setPersonStatus('success')
+
+          setMessage(
+            `${person.name} updated in server.`
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
+        .catch(error => {
+          setMessage(
+            `Information of ${person.name} has already been removed from server.`
+          )
+          setPersonStatus('error')
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+          window.location.reload(false)
+        })
+        .finally(() => {
           setNewName('')
           setNewNumber('')
         })
@@ -41,7 +64,7 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     const person = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
-
+    
     if (person) {
       updateNumber(person)
     } else {
@@ -54,6 +77,16 @@ const App = () => {
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
           setShowPerson(persons.concat(returnedPerson))
+          setPersonStatus('success')
+
+          setMessage(
+            `${personObject.name} added to server.`
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
+        .finally(() => {
           setNewName('')
           setNewNumber('')
         })
@@ -67,9 +100,9 @@ const App = () => {
       phonebookService
         .deletePerson(id)
         .then(() => {
-            setPersons(persons.filter(person => person.id !== id))
-            setShowPerson(persons.filter(person => person.id !== id))
-      })
+          setPersons(persons.filter(person => person.id !== id))
+          setShowPerson(persons.filter(person => person.id !== id))
+        })
     }
   }
   
@@ -93,6 +126,7 @@ const App = () => {
   return(
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} status={personStatus} />
       <Filter onPersonChange={handleShowPerson} />
       <h2>Add a New Person</h2>
       <PersonForm 
