@@ -1,5 +1,5 @@
 // https://fullstackopen.com/en/part2/adding_styles_to_react_app#couple-of-important-remarks
-// Exercise 2.19
+// Exercise 2.18
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
