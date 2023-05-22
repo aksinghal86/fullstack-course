@@ -1,11 +1,44 @@
 // https://fullstackopen.com/en/part2/adding_styles_to_react_app#couple-of-important-remarks
-// Exercise 2.18, 2.19
+// Exercise 2.18, 2.19, 2.20
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
+const GetWeatherData = ({ country }) => { 
+  const [countryWeather, setCountryWeather] = useState(null)
+  
+  useEffect(() => {
+    const api_key = process.env.REACT_APP_API_KEY
+    const baseURL = 'https://api.openweathermap.org/data/3.0/onecall'
+    const lat = country.latlng[0]
+    const lon = country.latlng[1]
+    const units = 'metric'
+    const weatherURL = `${baseURL}?lat=${lat}&lon=${lon}&units=${units}&appid=${api_key}`
+    
+    axios
+      .get(weatherURL)
+      .then(response => setCountryWeather(response.data))
+      .catch(error => {
+        console.log("Invalid URL")
+      })
+
+  }, [country])
+  
+  if (!countryWeather) return(null)
+
+  return (
+    <div>
+      <h1>Weather in {country.name.common}</h1>
+      <div>temperature {countryWeather.current.temp} C</div>
+      <img src={`https://openweathermap.org/img/wn/${countryWeather.current.weather[0].icon}@2x.png`} alt='weather'/>
+      <div>wind {countryWeather.current.wind_speed} m/s</div>
+    </div>
+  )
+}
+
 const ShowCountryDetail = ({ country }) => {
-  if (!country) return (null)
+  if (!country) return (null) 
+
   const languages = Object.values(country.languages)
   return (
     <div>
@@ -15,20 +48,13 @@ const ShowCountryDetail = ({ country }) => {
       <h2>languages:</h2>
       <ul>{languages.map(lang => <li key={lang}>{lang}</li>)}</ul> 
       <img src={country.flags.png} alt='flag'/>
+      <GetWeatherData country={country} />
     </div>
-    
   )
 }
 
 const ShowCountries = ({ countriesToShow }) => {
-  // if (countriesToShow.length === 1) {
-  //   return (
-  //     <ShowCountryDetail country={countriesToShow[0]} />
-  //   )
-  // } 
   const [showCountry, setShowCountry] = useState(null)
-  
-  
   const handleShowCountry = (country) => {
     setShowCountry(country)
   }
