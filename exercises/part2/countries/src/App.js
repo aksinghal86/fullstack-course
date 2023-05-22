@@ -1,10 +1,11 @@
 // https://fullstackopen.com/en/part2/adding_styles_to_react_app#couple-of-important-remarks
-// Exercise 2.18
+// Exercise 2.18, 2.19
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const ShowCountry = ({ country }) => {
+const ShowCountryDetail = ({ country }) => {
+  if (!country) return (null)
   const languages = Object.values(country.languages)
   return (
     <div>
@@ -20,16 +21,29 @@ const ShowCountry = ({ country }) => {
 }
 
 const ShowCountries = ({ countriesToShow }) => {
-  if (countriesToShow.length === 1) {
+  // if (countriesToShow.length === 1) {
+  //   return (
+  //     <ShowCountryDetail country={countriesToShow[0]} />
+  //   )
+  // } 
+  const [showCountry, setShowCountry] = useState(null)
+  
+  
+  const handleShowCountry = (country) => {
+    setShowCountry(country)
+  }
+  
+  if (countriesToShow.length < 10) { 
     return (
-      <ShowCountry country={countriesToShow[0]} />
-    )
-  } else if (countriesToShow.length < 10) { 
-    return (
-        countriesToShow.map(country => 
+      <div>
+        {countriesToShow.map(country => 
           <div key={country.ccn3}>
             {country.name.common}
-          </div>)
+            <button onClick={() => {handleShowCountry(country)}}>show</button>
+          </div>
+        )}
+        <ShowCountryDetail country={showCountry} />
+      </div>
     )
   } else {
     return (
@@ -39,7 +53,7 @@ const ShowCountries = ({ countriesToShow }) => {
 }
 
 const App = () =>  {
-  const [countries, setCountries] = useState(null)
+  const [countries, setCountries] = useState([])
   const [showCountries, setShowCountries] = useState([])
 
   useEffect(() => {
@@ -49,10 +63,8 @@ const App = () =>  {
         setCountries(response.data)
       })
   }, [])
-
-  if (!countries) return null
   
-  const handleCountryChange = (event) => {
+  const handleCountryInput = (event) => {
     const searchCountry = event.target.value.toLowerCase()
     const countryResults = countries.filter(country => 
       country.name.common.toLowerCase().includes(searchCountry)
@@ -62,7 +74,7 @@ const App = () =>  {
 
   return (
     <div>
-      <input onChange={handleCountryChange}></input>
+      <input onChange={handleCountryInput}></input>
       <ShowCountries countriesToShow={showCountries} />
     </div>
   )
