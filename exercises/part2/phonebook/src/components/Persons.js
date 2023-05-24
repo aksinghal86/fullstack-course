@@ -15,4 +15,4 @@ const Persons = ({ persons, deletePerson }) => {
     )
   }
 
-  export default Persons;
+  export default Persons

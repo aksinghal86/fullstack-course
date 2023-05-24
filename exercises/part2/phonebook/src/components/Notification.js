@@ -1,25 +1,23 @@
-const Notification = ({ message, status }) => {
-    const fontColor = status === 'success' ? 'green' : 'red'
-    const notificationStyle = {
-      color: fontColor, 
-      background: "lightgray",
-      fontstyle: 'italic', 
-      fontSize: 20, 
-      borderStyle: 'solid', 
-      borderRadius: 5,
-      padding: 10, 
-      marginBottom: 10,
-    }
+const Notification = ({ info }) => {
+  if (!info.message) {
+    return
+  }
   
-    if (message === null) { 
-      return null
-    } 
-  
-    return (
-      <div style={notificationStyle}>
-        {message}
-      </div>
-    )
+  const notificationStyle = {
+    background: "lightgray",
+    fontstyle: 'italic', 
+    fontSize: 20, 
+    borderStyle: 'solid', 
+    borderRadius: 5,
+    padding: 10, 
+    marginBottom: 10,
   }
 
-  export default Notification
+  return (
+    <div style={notificationStyle}>
+      {info.message}
+    </div>
+  )
+}
+
+export default Notification

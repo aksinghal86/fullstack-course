@@ -1,16 +1,16 @@
-const PersonForm = (props) => {
+const PersonForm = ({ addPerson, newName, newNumber, setNewName, setNewNumber }) => {
     return(
-      <form>
+      <form onSubmit={addPerson}>
         <div>
-          name: <input value={props.newName} onChange={props.onNameChange} />
+          name: <input value={newName} onChange={({ target }) => setNewName(target.value)} />
           <br/>
-          number: <input value={props.newNumber} onChange={props.onNumberChange} />
+          number: <input value={newNumber} onChange={({ target }) => setNewNumber(target.value)} />
         </div>
         <div>
-          <button type='submit' onClick={props.onClick}>add</button>
+          <button type='submit'>add</button>
         </div>
     </form>
     )
   }
 
-  export default PersonForm;
+  export default PersonForm
