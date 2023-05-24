@@ -6,32 +6,25 @@ import ShowCountries from './components/ShowCountries'
 import countriesService from './services/countries'
 
 const App = () =>  {
+  const [search, setSearch] = useState('fi')
   const [countries, setCountries] = useState([])
-  const [showCountries, setShowCountries] = useState([])
 
   useEffect(() => {
     countriesService
       .getAllCountries()
-      .then(allCountriesData => {
-        setCountries(allCountriesData)
-      })
-      .catch(error => {
-        console.log('Check if the url is correct.')
-      })
+      .then(data => setCountries(data))
+      .catch(() => console.log('Check if the url is correct.'))
   }, [])
-  
-  const handleCountryInput = (event) => {
-    const searchCountry = event.target.value.toLowerCase()
-    const countryResults = countries.filter(country => 
-      country.name.common.toLowerCase().includes(searchCountry)
-    )
-    setShowCountries(countryResults) 
-  }
+
+  const countryResults = countries.filter(c => c.name.common.toLowerCase().includes(search.toLocaleLowerCase()))
 
   return (
     <div>
-      <input onChange={handleCountryInput}></input>
-      <ShowCountries countriesToShow={showCountries} />
+      <div>
+        find country 
+        <input value={search} onChange={({ target }) => setSearch(target.value)} />
+      </div>
+      <ShowCountries countries={countryResults} showCountry={setSearch} />
     </div>
   )
 }

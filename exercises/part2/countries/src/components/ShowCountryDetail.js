@@ -2,7 +2,7 @@ import WeatherData from "./WeatherData"
 
 const ShowCountryDetail = ({ country }) => {
     if (!country) return (null) 
-    // console.log(country)
+
     const languages = Object.values(country.languages)
     return (
       <div>
